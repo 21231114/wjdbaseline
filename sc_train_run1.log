@@ -1,0 +1,273 @@
+TensorBoard logging to ./tb_logs/SC/GS_lr0.0001_0.0001_bs4_s15_mu5.0_0.01_0.1_5.0_1.0_emb64_dep2_ICCFalse_normalize
+Train instances: 240, Valid instances: 60
+Batch size: 4
+Objective sense: MINIMIZE
+
+======================================================================
+Starting Gumbel-Softmax Training for SC (MINIMIZE)
+  lr_output=0.0001, lr_inner=0.0001
+  num_samples=15, loss_config=normalize
+  mu_init=5.0, mu_step_size=0.01
+  mu_range=[0.1, 5.0], mu_value=1.0
+  lr_schedule=cos, cos_T=200
+  batch_size=4, num_epochs=500
+======================================================================
+
+@epoch0  TIME:21.3s
+  [Train] Loss=10.8793  Obj=44709.3819  Cons=2.6558  mu=5.0000  lr_o=1.00e-04  lr_i=1.00e-04
+  [Valid] Loss=0.6870  Obj=2727.0308  Cons=43.1300
+  [Eval]  BestFeasible=inf  BestObj=1756.0667  MeanObj=2725.8014  Feasible=2/30000
+  >> Best model saved (best_feasible=inf)
+@epoch1  TIME:22.3s
+  [Train] Loss=0.1920  Obj=657.1549  Cons=154.6225  mu=5.0000  lr_o=1.00e-04  lr_i=1.00e-04
+@epoch2  TIME:22.3s
+  [Train] Loss=0.1232  Obj=392.5659  Cons=66.1531  mu=5.0000  lr_o=9.99e-05  lr_i=9.99e-05
+@epoch3  TIME:22.3s
+  [Train] Loss=0.1148  Obj=358.9809  Cons=51.7850  mu=5.0000  lr_o=9.99e-05  lr_i=9.99e-05
+@epoch4  TIME:22.1s
+  [Train] Loss=0.1141  Obj=358.3316  Cons=38.0442  mu=5.0000  lr_o=9.98e-05  lr_i=9.98e-05
+  [Valid] Loss=0.0993  Obj=284.9595  Cons=70.1978
+  [Eval]  BestFeasible=inf  BestObj=156.6500  MeanObj=284.7984  Feasible=0/30000
+  >> Best model saved (best_feasible=inf)
+@epoch5  TIME:22.0s
+  [Train] Loss=0.1121  Obj=347.6816  Cons=41.9956  mu=5.0000  lr_o=9.98e-05  lr_i=9.98e-05
+@epoch6  TIME:22.1s
+  [Train] Loss=0.1139  Obj=358.3883  Cons=27.3758  mu=5.0000  lr_o=9.97e-05  lr_i=9.97e-05
+@epoch7  TIME:22.1s
+  [Train] Loss=0.1144  Obj=359.8343  Cons=24.9775  mu=5.0000  lr_o=9.96e-05  lr_i=9.96e-05
+@epoch8  TIME:22.2s
+  [Train] Loss=0.1152  Obj=362.6952  Cons=21.7403  mu=5.0000  lr_o=9.95e-05  lr_i=9.95e-05
+@epoch9  TIME:22.3s
+  [Train] Loss=0.1152  Obj=360.9207  Cons=25.4244  mu=5.0000  lr_o=9.94e-05  lr_i=9.94e-05
+  [Valid] Loss=0.1303  Obj=431.4343  Cons=6.3989
+  [Eval]  BestFeasible=inf  BestObj=284.0167  MeanObj=431.3833  Feasible=471/30000
+  >> Best model saved (best_feasible=inf)
+@epoch10  TIME:22.1s
+  [Train] Loss=0.1177  Obj=372.9176  Cons=20.6472  mu=5.0000  lr_o=9.93e-05  lr_i=9.93e-05
+@epoch11  TIME:21.9s
+  [Train] Loss=0.1180  Obj=373.8840  Cons=14.6844  mu=5.0000  lr_o=9.91e-05  lr_i=9.91e-05
+@epoch12  TIME:21.9s
+  [Train] Loss=0.1187  Obj=376.6845  Cons=14.8483  mu=5.0000  lr_o=9.90e-05  lr_i=9.90e-05
+@epoch13  TIME:22.2s
+  [Train] Loss=0.1200  Obj=381.8073  Cons=14.0572  mu=5.0000  lr_o=9.88e-05  lr_i=9.88e-05
+@epoch14  TIME:22.5s
+  [Train] Loss=0.1202  Obj=381.9853  Cons=13.5256  mu=5.0000  lr_o=9.86e-05  lr_i=9.86e-05
+  [Valid] Loss=0.1166  Obj=367.2192  Cons=18.7344
+  [Eval]  BestFeasible=inf  BestObj=229.0833  MeanObj=367.3449  Feasible=3/30000
+  >> Best model saved (best_feasible=inf)
+@epoch15  TIME:22.3s
+  [Train] Loss=0.1208  Obj=384.4383  Cons=12.3097  mu=5.0000  lr_o=9.84e-05  lr_i=9.84e-05
+@epoch16  TIME:22.3s
+  [Train] Loss=0.1214  Obj=386.5487  Cons=11.8789  mu=5.0000  lr_o=9.82e-05  lr_i=9.82e-05
+@epoch17  TIME:22.1s
+  [Train] Loss=0.1232  Obj=393.2800  Cons=10.1342  mu=5.0000  lr_o=9.80e-05  lr_i=9.80e-05
+@epoch18  TIME:22.1s
+  [Train] Loss=0.1235  Obj=395.0767  Cons=10.4886  mu=5.0000  lr_o=9.78e-05  lr_i=9.78e-05
+@epoch19  TIME:22.1s
+  [Train] Loss=0.1226  Obj=391.4406  Cons=10.0897  mu=5.0000  lr_o=9.76e-05  lr_i=9.76e-05
+  [Valid] Loss=0.1345  Obj=440.9332  Cons=4.1400
+  [Eval]  BestFeasible=395.1833  BestObj=289.9167  MeanObj=440.4215  Feasible=1526/30000
+  >> Best model saved (best_feasible=395.1833)
+@epoch20  TIME:22.1s
+  [Train] Loss=0.1239  Obj=395.9270  Cons=9.4478  mu=5.0000  lr_o=9.73e-05  lr_i=9.73e-05
+@epoch21  TIME:21.8s
+  [Train] Loss=0.1250  Obj=400.5889  Cons=10.1647  mu=5.0000  lr_o=9.70e-05  lr_i=9.70e-05
+@epoch22  TIME:21.9s
+  [Train] Loss=0.1249  Obj=400.1887  Cons=8.8889  mu=5.0000  lr_o=9.68e-05  lr_i=9.68e-05
+@epoch23  TIME:22.0s
+  [Train] Loss=0.1256  Obj=402.3715  Cons=9.3092  mu=5.0000  lr_o=9.65e-05  lr_i=9.65e-05
+@epoch24  TIME:22.2s
+  [Train] Loss=0.1235  Obj=394.7697  Cons=11.4956  mu=5.0000  lr_o=9.62e-05  lr_i=9.62e-05
+  [Valid] Loss=0.1197  Obj=382.0547  Cons=11.1400
+  [Eval]  BestFeasible=inf  BestObj=242.6667  MeanObj=382.0258  Feasible=71/30000
+@epoch25  TIME:22.3s
+  [Train] Loss=0.1250  Obj=400.9068  Cons=9.2097  mu=5.0000  lr_o=9.59e-05  lr_i=9.59e-05
+@epoch26  TIME:22.0s
+  [Train] Loss=0.1264  Obj=405.5035  Cons=8.3497  mu=5.0000  lr_o=9.56e-05  lr_i=9.56e-05
+@epoch27  TIME:21.7s
+  [Train] Loss=0.1258  Obj=403.7568  Cons=7.6772  mu=5.0000  lr_o=9.52e-05  lr_i=9.52e-05
+@epoch28  TIME:22.0s
+  [Train] Loss=0.1262  Obj=405.2998  Cons=9.2200  mu=5.0000  lr_o=9.49e-05  lr_i=9.49e-05
+@epoch29  TIME:22.1s
+  [Train] Loss=0.1260  Obj=404.7676  Cons=9.2350  mu=5.0000  lr_o=9.46e-05  lr_i=9.46e-05
+  [Valid] Loss=0.1325  Obj=439.3059  Cons=7.2733
+  [Eval]  BestFeasible=inf  BestObj=280.1000  MeanObj=440.1671  Feasible=314/30000
+@epoch30  TIME:22.3s
+  [Train] Loss=0.1252  Obj=401.4424  Cons=8.8911  mu=5.0000  lr_o=9.42e-05  lr_i=9.42e-05
+@epoch31  TIME:22.2s
+  [Train] Loss=0.1263  Obj=405.8871  Cons=6.7119  mu=5.0000  lr_o=9.38e-05  lr_i=9.38e-05
+@epoch32  TIME:22.1s
+  [Train] Loss=0.1263  Obj=406.2754  Cons=6.4858  mu=5.0000  lr_o=9.34e-05  lr_i=9.34e-05
+@epoch33  TIME:22.2s
+  [Train] Loss=0.1278  Obj=411.9719  Cons=6.1183  mu=5.0000  lr_o=9.30e-05  lr_i=9.30e-05
+@epoch34  TIME:22.2s
+  [Train] Loss=0.1279  Obj=412.5863  Cons=6.3372  mu=5.0000  lr_o=9.26e-05  lr_i=9.26e-05
+  [Valid] Loss=0.1051  Obj=305.1211  Cons=20.9867
+  [Eval]  BestFeasible=inf  BestObj=184.2333  MeanObj=305.4378  Feasible=0/30000
+@epoch35  TIME:22.0s
+  [Train] Loss=0.1255  Obj=402.7256  Cons=9.3942  mu=5.0000  lr_o=9.22e-05  lr_i=9.22e-05
+@epoch36  TIME:22.1s
+  [Train] Loss=0.1272  Obj=410.3065  Cons=6.8564  mu=5.0000  lr_o=9.18e-05  lr_i=9.18e-05
+@epoch37  TIME:22.2s
+  [Train] Loss=0.1261  Obj=406.0173  Cons=6.0722  mu=5.0000  lr_o=9.14e-05  lr_i=9.14e-05
+@epoch38  TIME:22.1s
+  [Train] Loss=0.1257  Obj=405.2853  Cons=5.7136  mu=5.0000  lr_o=9.09e-05  lr_i=9.09e-05
+@epoch39  TIME:22.0s
+  [Train] Loss=0.1263  Obj=407.5723  Cons=5.4436  mu=5.0000  lr_o=9.05e-05  lr_i=9.05e-05
+  [Valid] Loss=0.1208  Obj=379.9732  Cons=6.3844
+  [Eval]  BestFeasible=inf  BestObj=239.7500  MeanObj=379.8954  Feasible=329/30000
+@epoch40  TIME:22.0s
+  [Train] Loss=0.1249  Obj=402.3324  Cons=5.5433  mu=5.0000  lr_o=9.00e-05  lr_i=9.00e-05
+@epoch41  TIME:21.9s
+  [Train] Loss=0.1250  Obj=402.3780  Cons=5.7864  mu=5.0000  lr_o=8.95e-05  lr_i=8.95e-05
+@epoch42  TIME:22.0s
+  [Train] Loss=0.1258  Obj=406.4710  Cons=5.1486  mu=5.0000  lr_o=8.90e-05  lr_i=8.90e-05
+@epoch43  TIME:22.1s
+  [Train] Loss=0.1250  Obj=403.4487  Cons=5.4794  mu=5.0000  lr_o=8.85e-05  lr_i=8.85e-05
+@epoch44  TIME:22.1s
+  [Train] Loss=0.1273  Obj=412.2760  Cons=4.8711  mu=5.0000  lr_o=8.80e-05  lr_i=8.80e-05
+  [Valid] Loss=0.1314  Obj=434.2375  Cons=5.7211
+  [Eval]  BestFeasible=413.6667  BestObj=276.5167  MeanObj=434.9870  Feasible=866/30000
+@epoch45  TIME:22.0s
+  [Train] Loss=0.1240  Obj=399.3767  Cons=5.3853  mu=5.0000  lr_o=8.75e-05  lr_i=8.75e-05
+@epoch46  TIME:22.0s
+  [Train] Loss=0.1274  Obj=413.6017  Cons=4.6889  mu=5.0000  lr_o=8.70e-05  lr_i=8.70e-05
+@epoch47  TIME:22.0s
+  [Train] Loss=0.1269  Obj=410.9456  Cons=5.1133  mu=5.0000  lr_o=8.64e-05  lr_i=8.64e-05
+@epoch48  TIME:22.3s
+  [Train] Loss=0.1270  Obj=411.9622  Cons=5.1383  mu=5.0000  lr_o=8.59e-05  lr_i=8.59e-05
+@epoch49  TIME:22.3s
+  [Train] Loss=0.1243  Obj=401.6457  Cons=4.9378  mu=5.0000  lr_o=8.54e-05  lr_i=8.54e-05
+  [Valid] Loss=0.1340  Obj=434.2397  Cons=1.4578
+  [Eval]  BestFeasible=344.2500  BestObj=303.0333  MeanObj=434.0648  Feasible=8387/30000
+  >> Best model saved (best_feasible=344.2500)
+@epoch50  TIME:22.3s
+  [Train] Loss=0.1276  Obj=415.4596  Cons=3.9708  mu=5.0000  lr_o=8.48e-05  lr_i=8.48e-05
+@epoch51  TIME:22.5s
+  [Train] Loss=0.1256  Obj=407.2013  Cons=4.2303  mu=5.0000  lr_o=8.42e-05  lr_i=8.42e-05
+@epoch52  TIME:22.4s
+  [Train] Loss=0.1273  Obj=413.2641  Cons=5.1764  mu=5.0000  lr_o=8.37e-05  lr_i=8.37e-05
+@epoch53  TIME:22.7s
+  [Train] Loss=0.1256  Obj=407.4732  Cons=4.6625  mu=5.0000  lr_o=8.31e-05  lr_i=8.31e-05
+@epoch54  TIME:22.8s
+  [Train] Loss=0.1278  Obj=416.2769  Cons=3.4892  mu=5.0000  lr_o=8.25e-05  lr_i=8.25e-05
+  [Valid] Loss=0.1279  Obj=424.3916  Cons=4.2078
+  [Eval]  BestFeasible=382.7667  BestObj=274.7667  MeanObj=424.1876  Feasible=1738/30000
+@epoch55  TIME:22.6s
+  [Train] Loss=0.1272  Obj=415.4834  Cons=2.9503  mu=5.0000  lr_o=8.19e-05  lr_i=8.19e-05
+@epoch56  TIME:22.5s
+  [Train] Loss=0.1288  Obj=419.5459  Cons=4.2228  mu=5.0000  lr_o=8.13e-05  lr_i=8.13e-05
+@epoch57  TIME:22.7s
+  [Train] Loss=0.1307  Obj=425.8533  Cons=4.2339  mu=5.0000  lr_o=8.06e-05  lr_i=8.06e-05
+@epoch58  TIME:22.7s
+  [Train] Loss=0.1274  Obj=415.3953  Cons=3.4025  mu=5.0000  lr_o=8.00e-05  lr_i=8.00e-05
+@epoch59  TIME:22.7s
+  [Train] Loss=0.1268  Obj=412.4126  Cons=3.6850  mu=5.0000  lr_o=7.94e-05  lr_i=7.94e-05
+  [Valid] Loss=0.1132  Obj=354.9026  Cons=11.8433
+  [Eval]  BestFeasible=inf  BestObj=218.9667  MeanObj=354.6291  Feasible=67/30000
+@epoch60  TIME:22.6s
+  [Train] Loss=0.1261  Obj=409.9564  Cons=3.6583  mu=5.0000  lr_o=7.88e-05  lr_i=7.88e-05
+@epoch61  TIME:22.4s
+  [Train] Loss=0.1262  Obj=411.1625  Cons=3.0203  mu=5.0000  lr_o=7.81e-05  lr_i=7.81e-05
+@epoch62  TIME:22.5s
+  [Train] Loss=0.1266  Obj=414.1671  Cons=2.9175  mu=5.0000  lr_o=7.75e-05  lr_i=7.75e-05
+@epoch63  TIME:22.6s
+  [Train] Loss=0.1289  Obj=422.7467  Cons=2.6203  mu=5.0000  lr_o=7.68e-05  lr_i=7.68e-05
+@epoch64  TIME:22.4s
+  [Train] Loss=0.1295  Obj=423.3168  Cons=4.1758  mu=5.0000  lr_o=7.61e-05  lr_i=7.61e-05
+  [Valid] Loss=0.1278  Obj=414.3941  Cons=1.1589
+  [Eval]  BestFeasible=320.6333  BestObj=292.4167  MeanObj=414.7172  Feasible=10738/30000
+  >> Best model saved (best_feasible=320.6333)
+@epoch65  TIME:22.7s
+  [Train] Loss=0.1319  Obj=433.5896  Cons=2.7578  mu=5.0000  lr_o=7.55e-05  lr_i=7.55e-05
+@epoch66  TIME:22.8s
+  [Train] Loss=0.1289  Obj=422.1088  Cons=5.2394  mu=5.0000  lr_o=7.48e-05  lr_i=7.48e-05
+@epoch67  TIME:22.8s
+  [Train] Loss=0.1287  Obj=421.3093  Cons=2.5394  mu=5.0000  lr_o=7.41e-05  lr_i=7.41e-05
+@epoch68  TIME:22.8s
+  [Train] Loss=0.1283  Obj=421.1505  Cons=2.3036  mu=5.0000  lr_o=7.34e-05  lr_i=7.34e-05
+@epoch69  TIME:22.5s
+  [Train] Loss=0.1311  Obj=432.6369  Cons=2.6822  mu=5.0000  lr_o=7.27e-05  lr_i=7.27e-05
+  [Valid] Loss=0.1287  Obj=425.4495  Cons=1.5222
+  [Eval]  BestFeasible=332.3333  BestObj=284.7833  MeanObj=425.0328  Feasible=8409/30000
+@epoch70  TIME:22.4s
+  [Train] Loss=0.1276  Obj=415.9331  Cons=3.4811  mu=5.0000  lr_o=7.20e-05  lr_i=7.20e-05
+@epoch71  TIME:22.4s
+  [Train] Loss=0.1309  Obj=430.7270  Cons=3.6725  mu=5.0000  lr_o=7.13e-05  lr_i=7.13e-05
+@epoch72  TIME:22.2s
+  [Train] Loss=0.1334  Obj=441.6931  Cons=2.3653  mu=5.0000  lr_o=7.06e-05  lr_i=7.06e-05
+@epoch73  TIME:22.0s
+  [Train] Loss=0.1302  Obj=428.6631  Cons=2.7578  mu=5.0000  lr_o=6.99e-05  lr_i=6.99e-05
+@epoch74  TIME:22.1s
+  [Train] Loss=0.1305  Obj=430.4128  Cons=2.5706  mu=5.0000  lr_o=6.91e-05  lr_i=6.91e-05
+  [Valid] Loss=0.1167  Obj=369.5608  Cons=8.6944
+  [Eval]  BestFeasible=inf  BestObj=230.4000  MeanObj=369.8949  Feasible=240/30000
+@epoch75  TIME:22.0s
+  [Train] Loss=0.1332  Obj=437.2175  Cons=3.6525  mu=5.0000  lr_o=6.84e-05  lr_i=6.84e-05
+@epoch76  TIME:21.9s
+  [Train] Loss=0.1302  Obj=432.3345  Cons=3.6444  mu=5.0000  lr_o=6.77e-05  lr_i=6.77e-05
+@epoch77  TIME:22.2s
+  [Train] Loss=0.1311  Obj=431.5545  Cons=2.5203  mu=5.0000  lr_o=6.69e-05  lr_i=6.69e-05
+@epoch78  TIME:21.8s
+  [Train] Loss=0.1308  Obj=431.2731  Cons=2.5911  mu=5.0000  lr_o=6.62e-05  lr_i=6.62e-05
+@epoch79  TIME:21.8s
+  [Train] Loss=0.1300  Obj=428.7346  Cons=2.0808  mu=5.0000  lr_o=6.55e-05  lr_i=6.55e-05
+  [Valid] Loss=0.1257  Obj=405.5376  Cons=2.4344
+  [Eval]  BestFeasible=333.4167  BestObj=273.7333  MeanObj=405.6539  Feasible=4597/30000
+@epoch80  TIME:22.1s
+  [Train] Loss=0.1298  Obj=423.9219  Cons=4.7433  mu=5.0000  lr_o=6.47e-05  lr_i=6.47e-05
+@epoch81  TIME:21.8s
+  [Train] Loss=0.1397  Obj=466.3249  Cons=1.9953  mu=5.0000  lr_o=6.39e-05  lr_i=6.39e-05
+@epoch82  TIME:22.1s
+  [Train] Loss=0.1334  Obj=441.5292  Cons=2.0786  mu=5.0000  lr_o=6.32e-05  lr_i=6.32e-05
+@epoch83  TIME:22.0s
+  [Train] Loss=0.1347  Obj=447.9498  Cons=2.4122  mu=5.0000  lr_o=6.24e-05  lr_i=6.24e-05
+@epoch84  TIME:22.1s
+  [Train] Loss=0.1300  Obj=429.6821  Cons=2.2428  mu=5.0000  lr_o=6.17e-05  lr_i=6.17e-05
+  [Valid] Loss=0.1352  Obj=456.6075  Cons=1.2233
+  [Eval]  BestFeasible=347.3333  BestObj=305.8167  MeanObj=456.1720  Feasible=11154/30000
+@epoch85  TIME:21.8s
+  [Train] Loss=0.1381  Obj=465.4445  Cons=1.1817  mu=5.0000  lr_o=6.09e-05  lr_i=6.09e-05
+@epoch86  TIME:21.9s
+  [Train] Loss=0.1335  Obj=445.4637  Cons=1.1497  mu=5.0000  lr_o=6.01e-05  lr_i=6.01e-05
+@epoch87  TIME:22.0s
+  [Train] Loss=0.1334  Obj=448.7344  Cons=0.9942  mu=4.9999  lr_o=5.94e-05  lr_i=5.94e-05
+@epoch88  TIME:22.0s
+  [Train] Loss=0.1345  Obj=448.9150  Cons=1.5522  mu=5.0000  lr_o=5.86e-05  lr_i=5.86e-05
+@epoch89  TIME:21.9s
+  [Train] Loss=0.1343  Obj=449.9894  Cons=1.5044  mu=5.0000  lr_o=5.78e-05  lr_i=5.78e-05
+  [Valid] Loss=0.1243  Obj=404.8126  Cons=1.7311
+  [Eval]  BestFeasible=321.1833  BestObj=272.6167  MeanObj=404.7286  Feasible=7358/30000
+@epoch90  TIME:21.9s
+  [Train] Loss=0.1403  Obj=470.4536  Cons=1.1008  mu=5.0000  lr_o=5.70e-05  lr_i=5.70e-05
+@epoch91  TIME:22.0s
+  [Train] Loss=0.1299  Obj=430.4252  Cons=1.4633  mu=5.0000  lr_o=5.63e-05  lr_i=5.63e-05
+@epoch92  TIME:22.1s
+  [Train] Loss=0.1361  Obj=455.2454  Cons=0.8394  mu=4.9984  lr_o=5.55e-05  lr_i=5.55e-05
+@epoch93  TIME:22.4s
+  [Train] Loss=0.1345  Obj=452.8028  Cons=0.9125  mu=4.9975  lr_o=5.47e-05  lr_i=5.47e-05
+@epoch94  TIME:21.9s
+  [Train] Loss=0.1302  Obj=433.1114  Cons=1.1328  mu=4.9988  lr_o=5.39e-05  lr_i=5.39e-05
+  [Valid] Loss=0.1273  Obj=416.2223  Cons=0.5244
+  [Eval]  BestFeasible=311.0833  BestObj=297.1000  MeanObj=416.1592  Feasible=18191/30000
+  >> Best model saved (best_feasible=311.0833)
+@epoch95  TIME:21.8s
+  [Train] Loss=0.1323  Obj=440.6248  Cons=1.0806  mu=4.9997  lr_o=5.31e-05  lr_i=5.31e-05
+@epoch96  TIME:22.2s
+  [Train] Loss=0.1329  Obj=448.0294  Cons=0.9069  mu=4.9987  lr_o=5.24e-05  lr_i=5.24e-05
+@epoch97  TIME:21.9s
+  [Train] Loss=0.1323  Obj=444.0174  Cons=0.6739  mu=4.9955  lr_o=5.16e-05  lr_i=5.16e-05
+@epoch98  TIME:22.1s
+  [Train] Loss=0.1317  Obj=441.1413  Cons=1.1289  mu=4.9968  lr_o=5.08e-05  lr_i=5.08e-05
+@epoch99  TIME:22.2s
+  [Train] Loss=0.1332  Obj=444.6129  Cons=1.0200  mu=4.9970  lr_o=5.00e-05  lr_i=5.00e-05
+  [Valid] Loss=0.1314  Obj=436.0889  Cons=0.8578
+  [Eval]  BestFeasible=317.9500  BestObj=290.6833  MeanObj=435.7284  Feasible=14649/30000
+@epoch100  TIME:22.3s
+  [Train] Loss=0.1364  Obj=458.4294  Cons=1.0386  mu=4.9973  lr_o=4.92e-05  lr_i=4.92e-05
+@epoch101  TIME:22.3s
+  [Train] Loss=0.1307  Obj=436.2025  Cons=0.6681  mu=4.9940  lr_o=4.84e-05  lr_i=4.84e-05
+@epoch102  TIME:22.2s
+  [Train] Loss=0.1332  Obj=448.3176  Cons=0.7006  mu=4.9910  lr_o=4.76e-05  lr_i=4.76e-05
+@epoch103  TIME:22.2s
+  [Train] Loss=0.1337  Obj=451.1813  Cons=0.8128  mu=4.9892  lr_o=4.69e-05  lr_i=4.69e-05

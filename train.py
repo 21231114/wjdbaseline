@@ -468,7 +468,7 @@ def get_parser():
                         help="Step size for mu update (default: %(default)s)")
     parser.add_argument("--mu_value", type=float, default=1.0,
                         help="Target constraint violation for mu update (default: %(default)s)")
-    parser.add_argument("--mu_max", type=float, default=0.8,
+    parser.add_argument("--mu_max", type=float, default=5.0,
                         help="Maximum mu value (default: %(default)s)")
     parser.add_argument("--mu_min", type=float, default=0.01,
                         help="Minimum mu value (default: %(default)s)")

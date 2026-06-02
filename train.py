@@ -13,6 +13,7 @@ import argparse
 import os
 import time
 import random
+import tempfile
 
 import torch
 import torch.nn as nn
@@ -86,6 +87,23 @@ def map_logits_to_raw(logits_gnn, gnn_to_raw_map, n_raw_vars, device):
     count.scatter_add_(0, gnn_to_raw, torch.ones_like(logits_gnn))
     count = count.clamp(min=1)
     return logits_raw / count
+
+
+def graph_is_minimize(graph):
+    if hasattr(graph, 'obj_sense_min'):
+        obj_sense = graph.obj_sense_min
+        if torch.is_tensor(obj_sense):
+            return bool(obj_sense.reshape(-1)[0].item())
+        return bool(obj_sense)
+    return True
+
+
+def initial_best_obj(is_minimize):
+    return float('inf') if is_minimize else float('-inf')
+
+
+def objective_is_better(candidate, best, is_minimize):
+    return candidate < best if is_minimize else candidate > best
 
 
 # ============================================================
@@ -162,14 +180,16 @@ def evaluate_by_sampling(logits_gnn, graph, n_eval_samples, device):
     Evaluate a graph by sampling many solutions and finding the best feasible one.
 
     Returns:
-        best_feasible_obj: best objective among feasible solutions (inf if none).
+        best_feasible_obj: best objective among feasible solutions.
         best_obj: best objective among all solutions.
         mean_obj: mean objective over all solutions.
-        mean_feasible_obj: mean objective among feasible solutions (inf if none).
+        mean_feasible_obj: mean objective among feasible solutions.
         n_feasible: number of feasible solutions found.
+        best_feasible_solution: best feasible binary solution, or None.
     """
     n_raw_vars = graph.obj_coeffs.shape[0]
     n_cons = graph.raw_n_cons if isinstance(graph.raw_n_cons, int) else graph.raw_n_cons.item()
+    is_minimize = graph_is_minimize(graph)
 
     logits_raw = map_logits_to_raw(logits_gnn, graph.gnn_to_raw_map, n_raw_vars, device)
 
@@ -177,28 +197,29 @@ def evaluate_by_sampling(logits_gnn, graph, n_eval_samples, device):
     b = graph.raw_rhs.to(device).reshape(-1, 1)
     c = graph.obj_coeffs.to(device).reshape(-1, 1)
 
-    # Sample solutions
     xx = gumbel_sample(logits_raw, n_eval_samples, tau=1.0).float().reshape(n_eval_samples, -1)
-
-    # Objectives for all samples
-    objs = (xx @ c).squeeze(-1)  # [n_eval_samples]
-
-    # Find feasible solutions: all constraints satisfied
-    violations = torch.relu(A @ xx.T - b).sum(dim=0)  # [n_eval_samples]
+    objs = (xx @ c).squeeze(-1)
+    violations = torch.relu(A @ xx.T - b).sum(dim=0)
     feasible_mask = (violations == 0)
     n_feasible = feasible_mask.sum().item()
 
     if n_feasible > 0:
-        best_feasible_obj = objs[feasible_mask].min().item()
-        mean_feasible_obj = objs[feasible_mask].mean().item()
+        feasible_objs = objs[feasible_mask]
+        feasible_solutions = xx[feasible_mask]
+        best_idx = torch.argmin(feasible_objs) if is_minimize else torch.argmax(feasible_objs)
+        best_feasible_obj = feasible_objs[best_idx].item()
+        best_feasible_solution = feasible_solutions[best_idx].detach().cpu()
+        mean_feasible_obj = feasible_objs.mean().item()
     else:
-        best_feasible_obj = float('inf')
-        mean_feasible_obj = float('inf')
+        best_feasible_obj = initial_best_obj(is_minimize)
+        best_feasible_solution = None
+        mean_feasible_obj = initial_best_obj(is_minimize)
 
-    best_obj = objs.min().item()
+    best_obj_idx = torch.argmin(objs) if is_minimize else torch.argmax(objs)
+    best_obj = objs[best_obj_idx].item()
     mean_obj = objs.mean().item()
 
-    return best_feasible_obj, best_obj, mean_obj, mean_feasible_obj, n_feasible
+    return best_feasible_obj, best_obj, mean_obj, mean_feasible_obj, n_feasible, best_feasible_solution
 
 
 @torch.no_grad()
@@ -209,6 +230,7 @@ def evaluate_by_rounding(logits_gnn, graph, device):
     Returns:
         is_feasible: whether the rounded solution satisfies all constraints.
         obj_val: objective value of the rounded solution.
+        solution: rounded binary solution.
     """
     n_raw_vars = graph.obj_coeffs.shape[0]
     n_cons = graph.raw_n_cons if isinstance(graph.raw_n_cons, int) else graph.raw_n_cons.item()
@@ -219,17 +241,12 @@ def evaluate_by_rounding(logits_gnn, graph, device):
     b = graph.raw_rhs.to(device).reshape(-1, 1)
     c = graph.obj_coeffs.to(device).reshape(-1, 1)
 
-    # Round sigmoid(logits) to 0/1
     x_round = torch.round(torch.sigmoid(logits_raw)).reshape(1, -1)
-
-    # Objective
     obj_val = (x_round @ c).item()
-
-    # Check feasibility: all constraints Ax <= b
     violation = torch.relu(A @ x_round.T - b).sum().item()
     is_feasible = (violation == 0)
 
-    return is_feasible, obj_val
+    return is_feasible, obj_val, x_round.reshape(-1).detach().cpu()
 
 
 # ============================================================
@@ -370,10 +387,10 @@ def valid_epoch(model, data_loader, mu, num_samples, loss_config,
             loss_i, obj_i, cons_i = compute_loss_per_graph(
                 logits_per_graph[i], g, num_samples, mu, loss_config, device
             )
-            best_feas, best_obj, mean_obj, mean_feas_obj, n_feas = evaluate_by_sampling(
+            best_feas, best_obj, mean_obj, mean_feas_obj, n_feas, _ = evaluate_by_sampling(
                 logits_per_graph[i], g, n_eval_samples, device
             )
-            is_round_feasible, round_obj = evaluate_by_rounding(
+            is_round_feasible, round_obj, _ = evaluate_by_rounding(
                 logits_per_graph[i], g, device
             )
 
@@ -494,6 +511,8 @@ def get_parser():
     parser.add_argument("--log_save_dir", default="./train_logs")
     parser.add_argument("--tensorboard_dir", default="./tb_logs",
                         help="TensorBoard log directory")
+    parser.add_argument("--record_artifacts", default=False, action='store_true',
+                        help="Record model weights, log files, and TensorBoard data (default: disabled)")
 
     # Resume
     parser.add_argument("--resume_from", type=str, default=None,
@@ -517,6 +536,104 @@ def get_parser():
 
 
 # ============================================================
+#  Main helpers
+# ============================================================
+
+def build_model(args, device):
+    return GNNPolicy(
+        emb_size=args.emb_size,
+        cons_nfeats=args.cons_nfeats,
+        edge_nfeats=args.edge_nfeats,
+        var_nfeats=args.var_nfeats,
+        depth=args.depth,
+        Intra_Constraint_Competitive=args.Intra_Constraint_Competitive,
+    ).to(device)
+
+
+def build_optimizer(model, args):
+    output_param_ids = set()
+    for layer in (model.vars_output_layer, model.cons_output_layer):
+        for p in layer.parameters():
+            output_param_ids.add(id(p))
+    other_params = [p for p in model.parameters() if id(p) not in output_param_ids]
+
+    return optim.Adam([
+        {'params': model.vars_output_layer.parameters(), 'lr': args.lr_output},
+        {'params': model.cons_output_layer.parameters(), 'lr': args.lr_output},
+        {'params': other_params, 'lr': args.lr_inner},
+    ], weight_decay=args.weight_decay)
+
+
+def build_scheduler(optimizer, args):
+    if args.lr_schedule == 'cos':
+        return optim.lr_scheduler.CosineAnnealingLR(
+            optimizer, T_max=args.cos_T, eta_min=args.cos_min
+        )
+    if args.lr_schedule == 'cosrestart':
+        return optim.lr_scheduler.CosineAnnealingWarmRestarts(
+            optimizer, T_0=args.cos_T, T_mult=2, eta_min=args.cos_min
+        )
+    if args.lr_schedule == 'exp':
+        return optim.lr_scheduler.ExponentialLR(
+            optimizer, gamma=args.lr_anneal_factor
+        )
+    return None
+
+
+@torch.no_grad()
+def evaluate_current_instance(model, data_loader, n_eval_samples, device):
+    model.eval()
+    batch = next(iter(data_loader)).to(device)
+    logits, var_batch = model_forward(model, batch, device)
+    logits_per_graph = unbatch(logits, var_batch)
+    graph = batch.to_data_list()[0]
+
+    round_feasible, round_obj, round_solution = evaluate_by_rounding(
+        logits_per_graph[0], graph, device
+    )
+    sample_obj, _, _, _, sample_n_feasible, sample_solution = evaluate_by_sampling(
+        logits_per_graph[0], graph, n_eval_samples, device
+    )
+
+    return {
+        'is_minimize': graph_is_minimize(graph),
+        'round_feasible': round_feasible,
+        'round_obj': round_obj,
+        'round_solution': round_solution,
+        'sample_obj': sample_obj,
+        'sample_n_feasible': sample_n_feasible,
+        'sample_solution': sample_solution,
+    }
+
+
+def count_selected(solution):
+    if solution is None:
+        return 0
+    return int(solution.reshape(-1).sum().item())
+
+
+def format_best_result(result):
+    if result is None:
+        return "None"
+    return (
+        f"obj={result['obj']:.6g}, epoch={result['epoch']}, "
+        f"time={result['time']:.3f}s, n_vars={result['solution'].numel()}, "
+        f"n_ones={count_selected(result['solution'])}"
+    )
+
+
+def safe_instance_stem(instance_path):
+    stem = os.path.splitext(os.path.basename(instance_path))[0]
+    return ''.join(ch if ch.isalnum() or ch in ('-', '_', '.') else '_' for ch in stem)
+
+
+def write_line(log_file, text):
+    if log_file is not None:
+        log_file.write(text + '\n')
+        log_file.flush()
+
+
+# ============================================================
 #  Main
 # ============================================================
 
@@ -526,9 +643,8 @@ def main():
 
     device = args.device
     problem_type = args.problem_type
-    batch_size = args.batch_size or TASK_BATCH_SIZE.get(problem_type, 1)
+    batch_size = 1
 
-    # Reproducibility
     random.seed(args.seed)
     torch.manual_seed(args.seed)
     torch.cuda.manual_seed_all(args.seed)
@@ -542,291 +658,184 @@ def main():
         f'_{args.loss_config}'
     )
 
-    # Directories
-    model_save_path = os.path.join(args.model_save_dir, problem_type)
-    log_save_path = os.path.join(args.log_save_dir, problem_type)
-    os.makedirs(model_save_path, exist_ok=True)
-    os.makedirs(log_save_path, exist_ok=True)
-
-    log_file = open(f'{log_save_path}/{save_name}_train.log', 'w')
-
-    # TensorBoard
-    tb_writer = None
-    if HAS_TENSORBOARD:
-        tb_dir = os.path.join(args.tensorboard_dir, problem_type, save_name)
-        os.makedirs(tb_dir, exist_ok=True)
-        tb_writer = SummaryWriter(tb_dir)
-        print(f"TensorBoard logging to {tb_dir}")
-
-    # ---- Data loading ----
-    # Try instance_dir/problem_type first; if it doesn't exist, use instance_dir directly
     ins_dir = os.path.join(args.instance_dir, problem_type)
     if not os.path.isdir(ins_dir):
         ins_dir = args.instance_dir
-    all_instances = sorted([
+    if not os.path.isdir(ins_dir):
+        raise FileNotFoundError(f"Instance directory not found: {ins_dir}")
+
+    all_instances = sorted(
         os.path.join(ins_dir, f)
         for f in os.listdir(ins_dir)
         if f.endswith(('.lp', '.mps'))
-    ])
-
-    random.shuffle(all_instances)
-    split = int(0.8 * len(all_instances))
-    # Single-instance case: use the same instance for both train and valid
-    if split == 0 or len(all_instances) == 1:
-        train_files = all_instances
-        valid_files = all_instances
-    else:
-        train_files = all_instances[:split]
-        valid_files = all_instances[split:]
-
-    cache_dir = args.cache_dir
-    if cache_dir is None:
-        cache_dir = os.path.join(args.log_save_dir, problem_type, 'unsup_cache')
-
-    train_data = UnsupervisedGraphDataset(train_files, cache_dir=cache_dir)
-    valid_data = UnsupervisedGraphDataset(valid_files, cache_dir=cache_dir)
-
-    train_loader = torch_geometric.loader.DataLoader(
-        train_data, batch_size=batch_size, shuffle=True,
-        num_workers=args.num_workers,
-        follow_batch=["constraint_features", "variable_features"],
     )
-    valid_loader = torch_geometric.loader.DataLoader(
-        valid_data, batch_size=batch_size, shuffle=False,
-        num_workers=args.num_workers,
-        follow_batch=["constraint_features", "variable_features"],
-    )
+    if not all_instances:
+        raise FileNotFoundError(f"No .lp/.mps instances found in {ins_dir}")
 
-    print(f"Train instances: {len(train_files)}, Valid instances: {len(valid_files)}")
-    print(f"Batch size: {batch_size}")
+    if args.resume_from is not None and len(all_instances) != 1:
+        raise ValueError("--resume_from is only supported when --instance_dir contains one instance")
 
-    # Objective sense
-    first_data = train_data[0]
-    if hasattr(first_data, 'obj_sense_min'):
-        is_minimize = bool(first_data.obj_sense_min.item())
-    else:
-        _raw = extract_raw_ilp(train_files[0])
-        is_minimize = _raw['obj_sense_min']
-    obj_sign = 1.0 if is_minimize else -1.0
-    opt_dir = "MINIMIZE" if is_minimize else "MAXIMIZE"
-    print(f"Objective sense: {opt_dir}")
+    model_save_path = None
+    log_save_path = None
+    summary_log = None
+    temp_cache = None
+    if args.record_artifacts:
+        model_save_path = os.path.join(args.model_save_dir, problem_type)
+        log_save_path = os.path.join(args.log_save_dir, problem_type)
+        os.makedirs(model_save_path, exist_ok=True)
+        os.makedirs(log_save_path, exist_ok=True)
+        summary_log = open(os.path.join(log_save_path, f'{save_name}_summary.log'), 'w')
+    elif args.cache_dir is None:
+        temp_cache = tempfile.TemporaryDirectory()
 
-    # ---- Model ----
-    model = GNNPolicy(
-        emb_size=args.emb_size,
-        cons_nfeats=args.cons_nfeats,
-        edge_nfeats=args.edge_nfeats,
-        var_nfeats=args.var_nfeats,
-        depth=args.depth,
-        Intra_Constraint_Competitive=args.Intra_Constraint_Competitive,
-    ).to(device)
+    try:
+        for instance_idx, instance_path in enumerate(all_instances, start=1):
+            instance_name = os.path.basename(instance_path)
+            instance_stem = safe_instance_stem(instance_path)
 
-    # ---- Optimizer with separate learning rates ----
-    output_param_ids = set()
-    for layer in (model.vars_output_layer, model.cons_output_layer):
-        for p in layer.parameters():
-            output_param_ids.add(id(p))
-    other_params = [p for p in model.parameters() if id(p) not in output_param_ids]
-
-    optimizer = optim.Adam([
-        {'params': model.vars_output_layer.parameters(), 'lr': args.lr_output},
-        {'params': model.cons_output_layer.parameters(), 'lr': args.lr_output},
-        {'params': other_params, 'lr': args.lr_inner},
-    ], weight_decay=args.weight_decay)
-
-    # ---- LR Schedule ----
-    if args.lr_schedule == 'cos':
-        scheduler = optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max=args.cos_T, eta_min=args.cos_min
-        )
-    elif args.lr_schedule == 'cosrestart':
-        scheduler = optim.lr_scheduler.CosineAnnealingWarmRestarts(
-            optimizer, T_0=args.cos_T, T_mult=2, eta_min=args.cos_min
-        )
-    elif args.lr_schedule == 'exp':
-        scheduler = optim.lr_scheduler.ExponentialLR(
-            optimizer, gamma=args.lr_anneal_factor
-        )
-    else:
-        scheduler = None
-
-    # ---- Dynamic penalty state ----
-    mu = args.mu_init
-    start_epoch = 0
-
-    # ---- Resume from checkpoint ----
-    if args.resume_from is not None:
-        assert os.path.isfile(args.resume_from), f"Checkpoint not found: {args.resume_from}"
-        print(f"Loading checkpoint from {args.resume_from} ...")
-        ckpt = torch.load(args.resume_from, map_location=device)
-
-        if isinstance(ckpt, dict) and 'model_state_dict' in ckpt:
-            model.load_state_dict(ckpt['model_state_dict'])
-            optimizer.load_state_dict(ckpt['optimizer_state_dict'])
-            if scheduler is not None and 'scheduler_state_dict' in ckpt:
-                scheduler.load_state_dict(ckpt['scheduler_state_dict'])
-            mu = ckpt.get('mu', mu)
-            start_epoch = ckpt.get('epoch', 0) + 1
-            print(f"  Resumed: epoch={start_epoch}, mu={mu:.4f}")
-        else:
-            model.load_state_dict(ckpt)
-            print("  Loaded model weights only. Training from epoch 0.")
-
-    # ---- Training ----
-    best_round_feasible = -1  # best number of rounding-feasible instances (maximize)
-    best_round_obj = float('inf') if is_minimize else float('-inf')  # tiebreaker
-    patience_counter = 0
-
-    print(f"\n{'='*70}")
-    print(f"Starting Gumbel-Softmax Training for {problem_type} ({opt_dir})")
-    print(f"  lr_output={args.lr_output}, lr_inner={args.lr_inner}")
-    print(f"  num_samples={args.num_samples}, loss_config={args.loss_config}")
-    print(f"  mu_init={args.mu_init}, mu_step_size={args.mu_step_size}")
-    print(f"  mu_range=[{args.mu_min}, {args.mu_max}], mu_value={args.mu_value}")
-    print(f"  lr_schedule={args.lr_schedule}, cos_T={args.cos_T}")
-    print(f"  batch_size={batch_size}, num_epochs={args.num_epochs}")
-    print(f"{'='*70}\n")
-
-    global_step = 0
-
-    for epoch in range(start_epoch, args.num_epochs):
-        t0 = time.time()
-
-        # ---- Train ----
-        epoch_loss, epoch_obj, epoch_cons, num_graphs = train_epoch(
-            model, train_loader, optimizer,
-            mu, args.num_samples, args.loss_config,
-            args.grad_clip_norm, device,
-        )
-
-        # Update LR schedule (per epoch)
-        if scheduler is not None:
-            scheduler.step()
-
-        # Update mu dynamically
-        avg_cons = epoch_cons / max(num_graphs, 1)
-        mu = mu + args.mu_step_size * (avg_cons - args.mu_value)
-        mu = max(min(mu, args.mu_max), args.mu_min)
-
-        avg_loss = epoch_loss / max(num_graphs, 1)
-        avg_obj = epoch_obj / max(num_graphs, 1)
-
-        # Get current learning rates
-        lr_list = scheduler.get_last_lr() if scheduler else [args.lr_output, args.lr_output, args.lr_inner]
-
-        elapsed = time.time() - t0
-
-        # Log training
-        train_log = (
-            f"@epoch{epoch}  TIME:{elapsed:.1f}s\n"
-            f"  [Train] Loss={avg_loss:.4f}  Obj={avg_obj:.4f}  "
-            f"Cons={avg_cons:.4f}  mu={mu:.4f}  "
-            f"lr_o={lr_list[0]:.2e}  lr_i={lr_list[-1]:.2e}"
-        )
-
-        # TensorBoard training
-        if tb_writer is not None:
-            tb_writer.add_scalar('Loss/train_loss', avg_loss, epoch)
-            tb_writer.add_scalar('Loss/train_obj', avg_obj, epoch)
-            tb_writer.add_scalar('Loss/train_cons', avg_cons, epoch)
-            tb_writer.add_scalar('Params/mu', mu, epoch)
-            tb_writer.add_scalar('Params/lr_o', lr_list[0], epoch)
-            tb_writer.add_scalar('Params/lr_i', lr_list[-1], epoch)
-
-        # ---- Validate ----
-        val_metrics = None
-        if (epoch + 1) % args.val_every == 0 or epoch == 0:
-            val_metrics = valid_epoch(
-                model, valid_loader, mu, args.num_samples,
-                args.loss_config, args.n_eval_samples, device,
-            )
-
-            feas_rate = val_metrics['total_feasible'] / max(val_metrics['n_eval_samples'], 1)
-            train_log += (
-                f"\n  [Valid] Loss={val_metrics['loss']:.4f}  "
-                f"Obj={val_metrics['obj']:.4f}  Cons={val_metrics['cons']:.4f}"
-                f"\n  [Round] Feasible={val_metrics['round_n_feasible']}/{val_metrics['n_valid_instances']}  "
-                f"AvgObj={val_metrics['round_avg_obj']:.4f}"
-                f"\n  [Sample] BestFeasObj={val_metrics['best_feasible']:.4f}  "
-                f"BestObj={val_metrics['best_obj']:.4f}  "
-                f"MeanObj={val_metrics['mean_obj']:.4f}  "
-                f"MeanFeasObj={val_metrics['mean_feasible_obj']:.4f}  "
-                f"AvgBestFeasAll={val_metrics['avg_best_feas_all']:.4f}"
-                f"\n          FeasInst={val_metrics['n_sample_feasible_instances']}/{val_metrics['n_valid_instances']}  "
-                f"FeasSamples={val_metrics['total_feasible']}/{val_metrics['n_eval_samples']}  "
-                f"FeasRate={feas_rate:.4f}"
-            )
-
-            # TensorBoard validation
-            if tb_writer is not None:
-                tb_writer.add_scalar('Loss/valid_loss', val_metrics['loss'], epoch)
-                tb_writer.add_scalar('Loss/valid_obj', val_metrics['obj'], epoch)
-                tb_writer.add_scalar('Loss/valid_cons', val_metrics['cons'], epoch)
-                tb_writer.add_scalar('Round/feasible_count', val_metrics['round_n_feasible'], epoch)
-                tb_writer.add_scalar('Round/avg_obj', val_metrics['round_avg_obj'], epoch)
-                tb_writer.add_scalar('Sample/best_feasible_obj', val_metrics['best_feasible'], epoch)
-                tb_writer.add_scalar('Sample/best_obj', val_metrics['best_obj'], epoch)
-                tb_writer.add_scalar('Sample/mean_obj', val_metrics['mean_obj'], epoch)
-                tb_writer.add_scalar('Sample/mean_feasible_obj', val_metrics['mean_feasible_obj'], epoch)
-                tb_writer.add_scalar('Sample/feasible_instances', val_metrics['n_sample_feasible_instances'], epoch)
-                tb_writer.add_scalar('Sample/feasible_rate', feas_rate, epoch)
-
-            # Save best model: maximize rounding-feasible count, then best avg obj
-            curr_round_feas = val_metrics['round_n_feasible']
-            curr_round_obj = val_metrics['round_avg_obj']
-
-            improved = False
-            if curr_round_feas > best_round_feasible:
-                improved = True
-            elif curr_round_feas == best_round_feasible and curr_round_feas > 0:
-                if is_minimize and curr_round_obj < best_round_obj:
-                    improved = True
-                elif not is_minimize and curr_round_obj > best_round_obj:
-                    improved = True
-
-            if improved:
-                best_round_feasible = curr_round_feas
-                best_round_obj = curr_round_obj
-                patience_counter = 0
-                torch.save(
-                    model.state_dict(),
-                    os.path.join(model_save_path, f'{save_name}_model_best.pth')
-                )
-                train_log += (f"\n  >> Best model saved (round_feasible="
-                              f"{curr_round_feas}/{val_metrics['n_valid_instances']}, "
-                              f"round_avg_obj={curr_round_obj:.4f})")
+            if args.cache_dir is not None:
+                cache_dir = args.cache_dir
+            elif args.record_artifacts:
+                cache_dir = os.path.join(log_save_path, 'unsup_cache')
             else:
-                patience_counter += 1
+                cache_dir = temp_cache.name
 
-        # Save latest checkpoint (full, resumable)
-        full_ckpt = {
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'epoch': epoch,
-            'mu': mu,
-        }
-        if scheduler is not None:
-            full_ckpt['scheduler_state_dict'] = scheduler.state_dict()
-        torch.save(full_ckpt, os.path.join(model_save_path, f'{save_name}_model_last.pth'))
+            dataset = UnsupervisedGraphDataset([instance_path], cache_dir=cache_dir)
+            data_loader = torch_geometric.loader.DataLoader(
+                dataset, batch_size=1, shuffle=False,
+                num_workers=args.num_workers,
+                follow_batch=["constraint_features", "variable_features"],
+            )
 
-        print(train_log)
-        log_file.write(train_log + '\n')
-        log_file.flush()
+            model = build_model(args, device)
+            optimizer = build_optimizer(model, args)
+            scheduler = build_scheduler(optimizer, args)
+            mu = args.mu_init
+            start_epoch = 0
 
-        # Early stopping
-        if (val_metrics is not None
-                and patience_counter >= args.patience
-                and epoch > args.patience):
-            print(f"\nEarly stopping at epoch {epoch}: "
-                  f"no improvement for {args.patience} epochs.")
-            print(f"  Best round_feasible: {best_round_feasible}, "
-                  f"Best round_avg_obj: {best_round_obj:.4f}")
-            break
+            if args.resume_from is not None:
+                assert os.path.isfile(args.resume_from), f"Checkpoint not found: {args.resume_from}"
+                ckpt = torch.load(args.resume_from, map_location=device)
+                if isinstance(ckpt, dict) and 'model_state_dict' in ckpt:
+                    model.load_state_dict(ckpt['model_state_dict'])
+                    optimizer.load_state_dict(ckpt['optimizer_state_dict'])
+                    if scheduler is not None and 'scheduler_state_dict' in ckpt:
+                        scheduler.load_state_dict(ckpt['scheduler_state_dict'])
+                    mu = ckpt.get('mu', mu)
+                    start_epoch = ckpt.get('epoch', 0) + 1
+                else:
+                    model.load_state_dict(ckpt)
 
-    log_file.close()
-    if tb_writer is not None:
-        tb_writer.close()
-    print("Training completed.")
+            tb_writer = None
+            if args.record_artifacts and HAS_TENSORBOARD:
+                tb_dir = os.path.join(args.tensorboard_dir, problem_type, save_name, instance_stem)
+                os.makedirs(tb_dir, exist_ok=True)
+                tb_writer = SummaryWriter(tb_dir)
+
+            best_round = None
+            best_sample = None
+            cumulative_epoch_time = 0.0
+            patience_counter = 0
+
+            for epoch in range(start_epoch, args.num_epochs):
+                t0 = time.time()
+                epoch_loss, epoch_obj, epoch_cons, num_graphs = train_epoch(
+                    model, data_loader, optimizer,
+                    mu, args.num_samples, args.loss_config,
+                    args.grad_clip_norm, device,
+                )
+
+                if scheduler is not None:
+                    scheduler.step()
+
+                avg_cons = epoch_cons / max(num_graphs, 1)
+                mu = mu + args.mu_step_size * (avg_cons - args.mu_value)
+                mu = max(min(mu, args.mu_max), args.mu_min)
+
+                epoch_elapsed = time.time() - t0
+                cumulative_epoch_time += epoch_elapsed
+
+                eval_result = evaluate_current_instance(
+                    model, data_loader, args.n_eval_samples, device
+                )
+                is_minimize = eval_result['is_minimize']
+                improved = False
+
+                if eval_result['round_feasible']:
+                    if (best_round is None or objective_is_better(
+                            eval_result['round_obj'], best_round['obj'], is_minimize)):
+                        best_round = {
+                            'obj': eval_result['round_obj'],
+                            'solution': eval_result['round_solution'],
+                            'epoch': epoch,
+                            'time': cumulative_epoch_time,
+                        }
+                        improved = True
+
+                if eval_result['sample_n_feasible'] > 0:
+                    if (best_sample is None or objective_is_better(
+                            eval_result['sample_obj'], best_sample['obj'], is_minimize)):
+                        best_sample = {
+                            'obj': eval_result['sample_obj'],
+                            'solution': eval_result['sample_solution'],
+                            'epoch': epoch,
+                            'time': cumulative_epoch_time,
+                        }
+                        improved = True
+
+                if improved:
+                    patience_counter = 0
+                    if args.record_artifacts:
+                        torch.save(
+                            model.state_dict(),
+                            os.path.join(model_save_path, f'{save_name}_{instance_stem}_model_best.pth')
+                        )
+                else:
+                    patience_counter += 1
+
+                if tb_writer is not None:
+                    tb_writer.add_scalar('Loss/train_loss', epoch_loss / max(num_graphs, 1), epoch)
+                    tb_writer.add_scalar('Loss/train_obj', epoch_obj / max(num_graphs, 1), epoch)
+                    tb_writer.add_scalar('Loss/train_cons', avg_cons, epoch)
+                    tb_writer.add_scalar('Params/mu', mu, epoch)
+                    if best_round is not None:
+                        tb_writer.add_scalar('Round/best_obj', best_round['obj'], epoch)
+                    if best_sample is not None:
+                        tb_writer.add_scalar('Sample/best_obj', best_sample['obj'], epoch)
+
+                if args.record_artifacts:
+                    full_ckpt = {
+                        'model_state_dict': model.state_dict(),
+                        'optimizer_state_dict': optimizer.state_dict(),
+                        'epoch': epoch,
+                        'mu': mu,
+                    }
+                    if scheduler is not None:
+                        full_ckpt['scheduler_state_dict'] = scheduler.state_dict()
+                    torch.save(
+                        full_ckpt,
+                        os.path.join(model_save_path, f'{save_name}_{instance_stem}_model_last.pth')
+                    )
+
+                if patience_counter >= args.patience and epoch > args.patience:
+                    break
+
+            if tb_writer is not None:
+                tb_writer.close()
+
+            summary = (
+                f"Instance {instance_idx}/{len(all_instances)}: {instance_name}\n"
+                f"  Round best: {format_best_result(best_round)}\n"
+                f"  Sample best: {format_best_result(best_sample)}"
+            )
+            print(summary)
+            write_line(summary_log, summary)
+
+    finally:
+        if summary_log is not None:
+            summary_log.close()
+        if temp_cache is not None:
+            temp_cache.cleanup()
 
 
 if __name__ == '__main__':

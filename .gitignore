@@ -8,4 +8,5 @@ scores
 .vscode
 .codex
 .claude
-solution_records
+solution_records/*
+

@@ -509,6 +509,8 @@ def get_parser():
                         help="Cache directory for preprocessed data")
     parser.add_argument("--model_save_dir", default="./pretrain_models")
     parser.add_argument("--log_save_dir", default="./train_logs")
+    parser.add_argument("--solution_save_dir", default="./solution_records",
+                        help="Directory for per-instance best solution files")
     parser.add_argument("--tensorboard_dir", default="./tb_logs",
                         help="TensorBoard log directory")
     parser.add_argument("--record_artifacts", default=False, action='store_true',
@@ -633,6 +635,56 @@ def write_line(log_file, text):
         log_file.flush()
 
 
+def best_overall_result(best_round, best_sample, is_minimize):
+    if best_round is None:
+        if best_sample is None:
+            return None
+        return {'method': 'sample', **best_sample}
+    if best_sample is None:
+        return {'method': 'round', **best_round}
+    if objective_is_better(best_sample['obj'], best_round['obj'], is_minimize):
+        return {'method': 'sample', **best_sample}
+    return {'method': 'round', **best_round}
+
+
+def solution_vector_text(solution):
+    if solution is None:
+        return "None"
+    values = [str(int(v)) for v in solution.reshape(-1).tolist()]
+    return ' '.join(values)
+
+
+def write_solution_record(record_path, instance_name, is_minimize, best_round, best_sample, var_names):
+    best_result = best_overall_result(best_round, best_sample, is_minimize)
+    with open(record_path, 'w') as f:
+        f.write(f"instance: {instance_name}\n")
+        f.write(f"objective_sense: {'min' if is_minimize else 'max'}\n")
+        f.write(f"round_best: {format_best_result(best_round)}\n")
+        f.write(f"sample_best: {format_best_result(best_sample)}\n")
+
+        if best_result is None:
+            f.write("overall_best: None\n")
+            return
+
+        solution = best_result['solution'].reshape(-1)
+        f.write(f"overall_best_method: {best_result['method']}\n")
+        f.write(f"overall_best_obj: {best_result['obj']:.12g}\n")
+        f.write(f"overall_best_epoch: {best_result['epoch']}\n")
+        f.write(f"overall_best_time_seconds: {best_result['time']:.6f}\n")
+        f.write(f"n_vars: {solution.numel()}\n")
+        f.write(f"n_ones: {count_selected(solution)}\n")
+        f.write("solution_vector_raw_order:\n")
+        f.write(solution_vector_text(solution) + '\n')
+        f.write("variable_values:\n")
+
+        if var_names is not None and len(var_names) == solution.numel():
+            for name, value in zip(var_names, solution.tolist()):
+                f.write(f"{name} {int(value)}\n")
+        else:
+            for idx, value in enumerate(solution.tolist()):
+                f.write(f"x[{idx}] {int(value)}\n")
+
+
 # ============================================================
 #  Main
 # ============================================================
@@ -675,6 +727,9 @@ def main():
     if args.resume_from is not None and len(all_instances) != 1:
         raise ValueError("--resume_from is only supported when --instance_dir contains one instance")
 
+    solution_save_path = os.path.join(args.solution_save_dir, problem_type, save_name)
+    os.makedirs(solution_save_path, exist_ok=True)
+
     model_save_path = None
     log_save_path = None
     summary_log = None
@@ -701,6 +756,10 @@ def main():
                 cache_dir = temp_cache.name
 
             dataset = UnsupervisedGraphDataset([instance_path], cache_dir=cache_dir)
+            instance_graph = dataset.get(0)
+            instance_is_minimize = graph_is_minimize(instance_graph)
+            raw_var_names = getattr(instance_graph, 'raw_var_names', None)
+
             data_loader = torch_geometric.loader.DataLoader(
                 dataset, batch_size=1, shuffle=False,
                 num_workers=args.num_workers,
@@ -758,7 +817,7 @@ def main():
                 eval_result = evaluate_current_instance(
                     model, data_loader, args.n_eval_samples, device
                 )
-                is_minimize = eval_result['is_minimize']
+                is_minimize = instance_is_minimize
                 improved = False
 
                 if eval_result['round_feasible']:
@@ -823,10 +882,17 @@ def main():
             if tb_writer is not None:
                 tb_writer.close()
 
+            record_path = os.path.join(solution_save_path, f'{instance_stem}_solution.txt')
+            write_solution_record(
+                record_path, instance_name, instance_is_minimize,
+                best_round, best_sample, raw_var_names,
+            )
+
             summary = (
                 f"Instance {instance_idx}/{len(all_instances)}: {instance_name}\n"
                 f"  Round best: {format_best_result(best_round)}\n"
-                f"  Sample best: {format_best_result(best_sample)}"
+                f"  Sample best: {format_best_result(best_sample)}\n"
+                f"  Solution record: {record_path}"
             )
             print(summary)
             write_line(summary_log, summary)

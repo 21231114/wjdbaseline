@@ -1,0 +1,300 @@
+Instance 1/100: instance_1.lp                                                                                   18:50:09 [250/396]
+  Round best: obj=14330, epoch=0, time=2.970s, n_vars=5000, n_ones=436                                                            
+  Sample best: obj=1359, epoch=77, time=16.604s, n_vars=5000, n_ones=144                                                          
+Instance 2/100: instance_10.lp                                                                                                    
+  Round best: None                                                                                                                
+  Sample best: obj=1420, epoch=74, time=15.390s, n_vars=5000, n_ones=141                                                          
+Instance 3/100: instance_100.lp                                                                                                   
+  Round best: obj=52346, epoch=0, time=2.783s, n_vars=5000, n_ones=1336                                                           
+  Sample best: obj=1298, epoch=95, time=19.633s, n_vars=5000, n_ones=142                                                          
+Instance 4/100: instance_11.lp                                                                                                    
+  Round best: obj=50661, epoch=0, time=2.466s, n_vars=5000, n_ones=734                                                            
+  Sample best: obj=1491, epoch=72, time=15.203s, n_vars=5000, n_ones=138                                                          
+Instance 5/100: instance_12.lp                                                                                                    
+  Round best: obj=42955, epoch=0, time=2.420s, n_vars=5000, n_ones=927                                                            
+  Sample best: obj=1333, epoch=70, time=14.978s, n_vars=5000, n_ones=161                                                          
+Instance 6/100: instance_13.lp                                                                                                    
+  Round best: None                                                                                                                
+  Sample best: obj=1240, epoch=72, time=15.041s, n_vars=5000, n_ones=128                                                          
+Instance 7/100: instance_14.lp                                                                                                    
+  Round best: None                                                                                                                
+  Sample best: obj=1100, epoch=77, time=15.319s, n_vars=5000, n_ones=125                                                          
+Instance 8/100: instance_15.lp                                                                                                    
+  Round best: obj=61103, epoch=0, time=2.647s, n_vars=5000, n_ones=1774                                                           
+  Sample best: obj=1477, epoch=91, time=18.003s, n_vars=5000, n_ones=158                                                          
+Instance 9/100: instance_16.lp                                                                                                    
+  Round best: None                                                                                                                
+  Sample best: obj=1143, epoch=62, time=13.300s, n_vars=5000, n_ones=125                                                          
+Instance 10/100: instance_17.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1192, epoch=86, time=17.810s, n_vars=5000, n_ones=146                                                          
+Instance 11/100: instance_18.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1345, epoch=62, time=13.666s, n_vars=5000, n_ones=146                                                          
+Instance 12/100: instance_19.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1225, epoch=67, time=14.290s, n_vars=5000, n_ones=128                                                          
+Instance 13/100: instance_2.lp                                                                                                    
+  Round best: None                                                                                                                
+  Sample best: obj=1302, epoch=93, time=19.750s, n_vars=5000, n_ones=136                                                          
+Instance 14/100: instance_20.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1174, epoch=85, time=17.686s, n_vars=5000, n_ones=131                                                          
+Instance 15/100: instance_21.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1384, epoch=86, time=17.723s, n_vars=5000, n_ones=139                                                          
+Instance 16/100: instance_22.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1142, epoch=90, time=17.919s, n_vars=5000, n_ones=141
+Instance 17/100: instance_23.lp                                  
+  Round best: None                                               
+  Sample best: obj=1479, epoch=94, time=17.904s, n_vars=5000, n_ones=139                                                          
+Instance 18/100: instance_24.lp                                  
+  Round best: None                                               
+  Sample best: obj=1145, epoch=92, time=17.767s, n_vars=5000, n_ones=143                                                          
+Instance 19/100: instance_25.lp                                  
+  Round best: None                                               
+  Sample best: obj=1332, epoch=95, time=17.682s, n_vars=5000, n_ones=140                                                          
+Instance 20/100: instance_26.lp                                  
+  Round best: None                                               
+  Sample best: obj=1344, epoch=84, time=17.108s, n_vars=5000, n_ones=146                                                          
+Instance 21/100: instance_27.lp                                  
+  Round best: None                                               
+  Sample best: obj=1232, epoch=80, time=17.429s, n_vars=5000, n_ones=149                                                          
+Instance 22/100: instance_28.lp                                  
+  Round best: None                                               
+  Sample best: obj=1108, epoch=99, time=20.010s, n_vars=5000, n_ones=137                                                          
+Instance 23/100: instance_29.lp                                  
+  Round best: obj=18700, epoch=0, time=2.483s, n_vars=5000, n_ones=434                                                            
+  Sample best: obj=1330, epoch=72, time=15.133s, n_vars=5000, n_ones=149                                                          
+Instance 24/100: instance_3.lp                                   
+  Round best: None                                               
+  Sample best: obj=1249, epoch=97, time=19.792s, n_vars=5000, n_ones=146                                                          
+Instance 25/100: instance_30.lp                                  
+  Round best: None                                               
+  Sample best: obj=1229, epoch=98, time=20.640s, n_vars=5000, n_ones=139                                                          
+Instance 26/100: instance_31.lp                                  
+  Round best: None                                               
+  Sample best: obj=1250, epoch=99, time=20.659s, n_vars=5000, n_ones=155                                                          
+Instance 27/100: instance_32.lp                                  
+  Round best: None                                               
+  Sample best: obj=1371, epoch=85, time=18.613s, n_vars=5000, n_ones=137                                                          
+Instance 28/100: instance_33.lp                                  
+  Round best: obj=62808, epoch=0, time=2.455s, n_vars=5000, n_ones=2483                                                           
+  Sample best: obj=1392, epoch=73, time=15.656s, n_vars=5000, n_ones=156                                                          
+Instance 29/100: instance_34.lp                                  
+  Round best: obj=29329, epoch=0, time=2.705s, n_vars=5000, n_ones=942                                                            
+  Sample best: obj=1513, epoch=90, time=19.483s, n_vars=5000, n_ones=143                                                          
+Instance 30/100: instance_35.lp                                  
+  Round best: None                                               
+  Sample best: obj=1037, epoch=65, time=14.583s, n_vars=5000, n_ones=127                                                          
+Instance 31/100: instance_36.lp                                  
+  Round best: None                                               
+  Sample best: obj=1056, epoch=72, time=15.887s, n_vars=5000, n_ones=141                                                          
+Instance 32/100: instance_37.lp                                  
+  Round best: None                                               
+  Sample best: obj=1258, epoch=67, time=15.369s, n_vars=5000, n_ones=129
+Instance 33/100: instance_38.lp                                                                                                   
+  Round best: obj=131539, epoch=0, time=2.387s, n_vars=5000, n_ones=3456                                                          
+  Sample best: obj=1446, epoch=54, time=12.587s, n_vars=5000, n_ones=148                                                          
+Instance 34/100: instance_39.lp                                                                                                   
+  Round best: obj=129611, epoch=0, time=2.512s, n_vars=5000, n_ones=3025                                                          
+  Sample best: obj=1512, epoch=90, time=17.728s, n_vars=5000, n_ones=136                                                          
+Instance 35/100: instance_4.lp                                                                                                    
+  Round best: None                                                                                                                
+  Sample best: obj=1342, epoch=78, time=16.038s, n_vars=5000, n_ones=132                                                          
+Instance 36/100: instance_40.lp                                                                                                   
+  Round best: obj=38907, epoch=0, time=2.446s, n_vars=5000, n_ones=752                                                            
+  Sample best: obj=1522, epoch=51, time=11.538s, n_vars=5000, n_ones=148                                                          
+Instance 37/100: instance_41.lp                                                                                                   
+  Round best: obj=25367, epoch=0, time=2.829s, n_vars=5000, n_ones=678                                                            
+  Sample best: obj=1314, epoch=83, time=17.668s, n_vars=5000, n_ones=138                                                          
+Instance 38/100: instance_42.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1134, epoch=93, time=18.848s, n_vars=5000, n_ones=140                                                          
+Instance 39/100: instance_43.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1308, epoch=53, time=11.999s, n_vars=5000, n_ones=142                                                          
+Instance 40/100: instance_44.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1339, epoch=93, time=18.975s, n_vars=5000, n_ones=139                                                          
+Instance 41/100: instance_45.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1356, epoch=86, time=17.244s, n_vars=5000, n_ones=141                                                          
+Instance 42/100: instance_46.lp                                                                                                   
+  Round best: obj=100458, epoch=0, time=2.495s, n_vars=5000, n_ones=3123                                                          
+  Sample best: obj=1452, epoch=93, time=18.357s, n_vars=5000, n_ones=141                                                          
+Instance 43/100: instance_47.lp                                                                                                   
+  Round best: obj=14968, epoch=0, time=2.567s, n_vars=5000, n_ones=455                                                            
+  Sample best: obj=1237, epoch=94, time=18.975s, n_vars=5000, n_ones=155                                                          
+Instance 44/100: instance_48.lp                                  
+  Round best: obj=29844, epoch=0, time=2.433s, n_vars=5000, n_ones=671                                                            
+  Sample best: obj=1056, epoch=75, time=15.578s, n_vars=5000, n_ones=142                                                          
+Instance 45/100: instance_49.lp                                  
+  Round best: None                                               
+  Sample best: obj=1244, epoch=80, time=16.050s, n_vars=5000, n_ones=135                                                          
+Instance 46/100: instance_5.lp                                   
+  Round best: None                                               
+  Sample best: obj=1238, epoch=80, time=16.113s, n_vars=5000, n_ones=146                                                          
+Instance 47/100: instance_50.lp                                  
+  Round best: obj=16220, epoch=0, time=2.407s, n_vars=5000, n_ones=1009                                                           
+  Sample best: obj=1369, epoch=77, time=15.880s, n_vars=5000, n_ones=138  
+Instance 48/100: instance_51.lp                                                                                 19:16:37 [113/400]
+  Round best: None                                                                                                                
+  Sample best: obj=1272, epoch=89, time=17.547s, n_vars=5000, n_ones=146                                                          
+Instance 49/100: instance_52.lp                                                                                                   
+  Round best: obj=49819, epoch=0, time=2.387s, n_vars=5000, n_ones=1012                                                           
+  Sample best: obj=1119, epoch=89, time=17.667s, n_vars=5000, n_ones=151                                                          
+Instance 50/100: instance_53.lp                                                                                                   
+  Round best: obj=58113, epoch=0, time=2.619s, n_vars=5000, n_ones=2097                                                           
+  Sample best: obj=1340, epoch=78, time=15.743s, n_vars=5000, n_ones=150                                                          
+Instance 51/100: instance_54.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1223, epoch=91, time=18.126s, n_vars=5000, n_ones=134                                                          
+Instance 52/100: instance_55.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1104, epoch=96, time=19.023s, n_vars=5000, n_ones=135                                                          
+Instance 53/100: instance_56.lp                                                                                                   
+  Round best: obj=33610, epoch=0, time=2.455s, n_vars=5000, n_ones=808                                                            
+  Sample best: obj=1756, epoch=47, time=10.337s, n_vars=5000, n_ones=125                                                          
+Instance 54/100: instance_57.lp                                                                                                   
+  Round best: obj=87237, epoch=0, time=2.383s, n_vars=5000, n_ones=2713                                                           
+  Sample best: obj=1205, epoch=97, time=18.868s, n_vars=5000, n_ones=138                                                          
+Instance 55/100: instance_58.lp                                  
+  Round best: None                                               
+  Sample best: obj=1241, epoch=84, time=16.861s, n_vars=5000, n_ones=148                                                          
+Instance 56/100: instance_59.lp                                  
+  Round best: None                                               
+  Sample best: obj=1270, epoch=88, time=17.438s, n_vars=5000, n_ones=160                                                          
+Instance 57/100: instance_6.lp                                   
+  Round best: obj=98503, epoch=0, time=2.461s, n_vars=5000, n_ones=1710                                                           
+  Sample best: obj=1280, epoch=99, time=19.662s, n_vars=5000, n_ones=143                                                          
+Instance 58/100: instance_60.lp                                  
+  Round best: None                                               
+  Sample best: obj=1357, epoch=79, time=15.856s, n_vars=5000, n_ones=134                                                          
+Instance 59/100: instance_61.lp                                  
+  Round best: None                                               
+  Sample best: obj=1257, epoch=66, time=13.686s, n_vars=5000, n_ones=128                                                          
+Instance 60/100: instance_62.lp                                  
+  Round best: None                                               
+  Sample best: obj=1395, epoch=88, time=17.529s, n_vars=5000, n_ones=157                                                          
+Instance 61/100: instance_63.lp                                  
+  Round best: None                                               
+  Sample best: obj=1777, epoch=90, time=17.985s, n_vars=5000, n_ones=137                                                          
+Instance 62/100: instance_64.lp                                  
+  Round best: None                                               
+  Sample best: obj=1058, epoch=98, time=19.933s, n_vars=5000, n_ones=148  
+Instance 63/100: instance_65.lp                                  
+  Round best: obj=49173, epoch=0, time=2.773s, n_vars=5000, n_ones=986                                                            
+  Sample best: obj=1055, epoch=80, time=17.581s, n_vars=5000, n_ones=132                                                          
+Instance 64/100: instance_66.lp                                  
+  Round best: None                                               
+  Sample best: obj=1407, epoch=90, time=19.638s, n_vars=5000, n_ones=146                                                          
+Instance 65/100: instance_67.lp                                  
+  Round best: obj=84074, epoch=0, time=2.407s, n_vars=5000, n_ones=1229                                                           
+  Sample best: obj=1100, epoch=84, time=18.049s, n_vars=5000, n_ones=127                                                          
+Instance 66/100: instance_68.lp                                  
+  Round best: None                                               
+  Sample best: obj=1352, epoch=96, time=20.231s, n_vars=5000, n_ones=135                                                          
+Instance 67/100: instance_69.lp                                  
+  Round best: None                                               
+  Sample best: obj=1356, epoch=99, time=21.324s, n_vars=5000, n_ones=135                                                          
+Instance 68/100: instance_7.lp                                   
+  Round best: None                                               
+  Sample best: obj=1381, epoch=95, time=20.494s, n_vars=5000, n_ones=141                                                          
+Instance 69/100: instance_70.lp                                  
+  Round best: None                                               
+  Sample best: obj=1409, epoch=92, time=19.695s, n_vars=5000, n_ones=148                                                          
+Instance 70/100: instance_71.lp                                  
+  Round best: obj=107950, epoch=0, time=2.503s, n_vars=5000, n_ones=2721                                                          
+  Sample best: obj=1206, epoch=80, time=17.546s, n_vars=5000, n_ones=124                                                          
+Instance 71/100: instance_72.lp                                  
+  Round best: None                                               
+  Sample best: obj=1349, epoch=98, time=21.281s, n_vars=5000, n_ones=144                                                          
+Instance 72/100: instance_73.lp                                  
+  Round best: None                                               
+  Sample best: obj=1317, epoch=70, time=15.736s, n_vars=5000, n_ones=148                                                          
+Instance 73/100: instance_74.lp                                  
+  Round best: obj=127857, epoch=0, time=2.460s, n_vars=5000, n_ones=2312                                                          
+  Sample best: obj=1256, epoch=84, time=18.507s, n_vars=5000, n_ones=133                                                          
+Instance 74/100: instance_75.lp                                  
+  Round best: None                                               
+  Sample best: obj=1046, epoch=91, time=19.432s, n_vars=5000, n_ones=146                                                          
+Instance 75/100: instance_76.lp                                  
+  Round best: None                                               
+  Sample best: obj=1355, epoch=84, time=18.211s, n_vars=5000, n_ones=161                                                          
+Instance 76/100: instance_77.lp                                  
+  Round best: None                                               
+  Sample best: obj=1456, epoch=92, time=20.079s, n_vars=5000, n_ones=148                                                          
+Instance 77/100: instance_78.lp                                  
+  Round best: None                                               
+  Sample best: obj=1227, epoch=97, time=20.606s, n_vars=5000, n_ones=135    
+Instance 78/100: instance_79.lp                                                                                  19:34:16 [19/396]
+  Round best: None                                               
+  Sample best: obj=1223, epoch=91, time=18.741s, n_vars=5000, n_ones=138                                                          
+Instance 79/100: instance_8.lp                                   
+  Round best: None                                               
+  Sample best: obj=1421, epoch=99, time=19.151s, n_vars=5000, n_ones=163                                                          
+Instance 80/100: instance_80.lp                                  
+  Round best: None                                               
+  Sample best: obj=1611, epoch=76, time=15.200s, n_vars=5000, n_ones=142                                                          
+Instance 81/100: instance_81.lp                                  
+  Round best: None                                                                                                                
+  Sample best: obj=1384, epoch=89, time=17.499s, n_vars=5000, n_ones=129                                                          
+Instance 82/100: instance_82.lp                                  
+  Round best: None                                               
+  Sample best: obj=1310, epoch=76, time=15.003s, n_vars=5000, n_ones=123                                                          
+Instance 83/100: instance_83.lp                                  
+  Round best: None                                               
+  Sample best: obj=1582, epoch=82, time=16.484s, n_vars=5000, n_ones=149                                                          
+Instance 84/100: instance_84.lp                                  
+  Round best: None                                               
+  Sample best: obj=1377, epoch=50, time=11.056s, n_vars=5000, n_ones=141                                                          
+Instance 85/100: instance_85.lp                                  
+  Round best: None                                               
+  Sample best: obj=1321, epoch=83, time=16.533s, n_vars=5000, n_ones=129                                                          
+Instance 86/100: instance_86.lp                                  
+  Round best: None                                               
+  Sample best: obj=1211, epoch=89, time=17.823s, n_vars=5000, n_ones=151                                                          
+Instance 87/100: instance_87.lp                                  
+  Round best: None                                               
+  Sample best: obj=1337, epoch=63, time=13.543s, n_vars=5000, n_ones=136                                                          
+Instance 88/100: instance_88.lp                                  
+  Round best: obj=32001, epoch=0, time=2.545s, n_vars=5000, n_ones=828                                                            
+  Sample best: obj=1101, epoch=74, time=15.574s, n_vars=5000, n_ones=151                                                          
+Instance 89/100: instance_89.lp                                  
+  Round best: None                                               
+  Sample best: obj=1174, epoch=76, time=15.392s, n_vars=5000, n_ones=134                                                          
+Instance 90/100: instance_9.lp                                   
+  Round best: obj=6953, epoch=0, time=2.358s, n_vars=5000, n_ones=427                                                             
+  Sample best: obj=1367, epoch=92, time=17.907s, n_vars=5000, n_ones=147                                                          
+Instance 91/100: instance_90.lp                                  
+  Round best: obj=13298, epoch=0, time=2.398s, n_vars=5000, n_ones=155                                                            
+  Sample best: obj=1413, epoch=85, time=17.010s, n_vars=5000, n_ones=137                                                          
+Instance 92/100: instance_91.lp                                  
+  Round best: None                                               
+  Sample best: obj=1243, epoch=99, time=19.241s, n_vars=5000, n_ones=152                                                          
+Instance 93/100: instance_92.lp                                  
+  Round best: None                                               
+  Sample best: obj=1338, epoch=99, time=19.240s, n_vars=5000, n_ones=139                                                          
+Instance 94/100: instance_93.lp                                  
+  Round best: obj=173621, epoch=0, time=2.427s, n_vars=5000, n_ones=3878                                                          
+  Sample best: obj=1356, epoch=92, time=18.239s, n_vars=5000, n_ones=134  
+Instance 95/100: instance_94.lp                                  
+  Round best: None                                                                                                                
+  Sample best: obj=1236, epoch=47, time=10.519s, n_vars=5000, n_ones=147                                                          
+Instance 96/100: instance_95.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1423, epoch=94, time=18.208s, n_vars=5000, n_ones=154                                                          
+Instance 97/100: instance_96.lp                                  
+  Round best: None                                                                                                                
+  Sample best: obj=1190, epoch=63, time=13.479s, n_vars=5000, n_ones=136                                                          
+Instance 98/100: instance_97.lp                                  
+  Round best: None                                                                                                                
+  Sample best: obj=1420, epoch=91, time=17.729s, n_vars=5000, n_ones=131                                                          
+Instance 99/100: instance_98.lp                                                                                                   
+  Round best: None                                                                                                                
+  Sample best: obj=1158, epoch=89, time=17.203s, n_vars=5000, n_ones=115                                                          
+Instance 100/100: instance_99.lp                                                                                                  
+  Round best: obj=158451, epoch=0, time=2.575s, n_vars=5000, n_ones=2338                                                          
+  Sample best: obj=1427, epoch=83, time=16.680s, n_vars=5000, n_ones=138

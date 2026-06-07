@@ -84,6 +84,7 @@ class UnsupervisedGraphDataset(torch_geometric.data.Dataset):
         # Variable mapping: from GNN output order to raw ILP order
         all_varname = list(v_map)
         raw_var_names = raw_ilp['var_names']
+        graph.raw_var_names = raw_var_names
         raw_name2idx = {name: i for i, name in enumerate(raw_var_names)}
 
         # gnn_to_raw_map[i] = index in raw ILP of the i-th GNN variable
